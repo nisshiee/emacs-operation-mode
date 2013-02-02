@@ -128,7 +128,9 @@
     (insert "--log--\n\n--log--\n")
     (overlay-put
      (make-overlay beg (- (point) 1) (current-buffer) t nil)
-     'face 'operation-mode-log-face)))
+     'face 'operation-mode-log-face))
+  (previous-line)
+  (previous-line))
 
 (defun operation-mode-set-prompt (prompt)
   "set prompt string"
