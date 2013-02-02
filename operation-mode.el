@@ -114,8 +114,10 @@
     (kill-ring-save beg end)
     (overlay-put
      (make-overlay beg end (current-buffer) t nil)
-     'face 'operation-mode-copied-face))
-  (next-line))
+     'face 'operation-mode-copied-face)
+    (if (>= end (point-max))
+        (goto-char end)
+      (goto-char (+ end 1)))))
 
 (defun operation-mode-insert-log ()
   "insert space for opeartion log"
