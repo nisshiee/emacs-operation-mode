@@ -1,6 +1,10 @@
 ;;; -*-Emacs-Lisp-*-
 ;;; operation-mode.el - Major mode for server operations
 
+;; -------------------- var --------------------
+(defvar operation-mode-prompt
+  nil
+  "prompt string which will be not copied")
 
 ;; -------------------- faces --------------------
 (make-face 'operation-mode-copied-face)
@@ -87,14 +91,26 @@
         comment-end                     "")
   (use-local-map operation-mode-map)
   (set-syntax-table operation-mode-syntax-table)
-  (font-lock-fontify-buffer))
+  (font-lock-fontify-buffer)
+  (make-local-variable 'operation-mode-prompt)
+  (setq operation-mode-prompt nil))
 
+;; -------------------- private functions --------------------
+(defun operation-mode-copy-begin ()
+  "get position of copy beginning"
+  (let ((bol (point-at-bol ())) (eol (point-at-eol ())))
+    (if (and operation-mode-prompt (< bol eol))
+        (progn (beginning-of-line)
+               (if (search-forward operation-mode-prompt (- eol 1) t)
+                   (point)
+                 bol))
+      bol)))
 
 ;; -------------------- interactive functions --------------------
 (defun operation-mode-copy-cmd ()
   "copy operation command"
   (interactive)
-  (let ((beg (point-at-bol ())) (end (point-at-eol ())))
+  (let ((beg (operation-mode-copy-begin)) (end (point-at-eol ())))
     (kill-ring-save beg end)
     (overlay-put
      (make-overlay beg end (current-buffer) t nil)
@@ -110,6 +126,17 @@
      (make-overlay beg (- (point) 1) (current-buffer) t nil)
      'face 'operation-mode-log-face)))
 
+(defun operation-mode-set-prompt (prompt)
+  "set prompt string"
+  (interactive "sInput prompt: ")
+  (if (stringp prompt)
+      (setq operation-mode-prompt prompt)
+    (setq operation-mode-prompt nil)))
+
+(defun operation-mode-reset-prompt ()
+  "reset prompt string"
+  (interactive)
+  (setq operation-mode-prompt nil))
 
 ;; -------------------- provides --------------------
 (provide 'operation-mode)
