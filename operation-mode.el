@@ -71,6 +71,9 @@
                 "perl"
                 "java"
                 "vi"
+                "cd"
+                "ln"
+                "find"
                 "mount")
               'words))
 (font-lock-add-keywords 'operation-mode
