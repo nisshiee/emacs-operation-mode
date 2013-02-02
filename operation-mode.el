@@ -19,7 +19,6 @@
     (progn
       (setq operation-mode-map (make-keymap))
       (define-key operation-mode-map (kbd "M-c") 'operation-mode-copy-cmd)
-      (define-key operation-mode-map (kbd "M-v") 'operation-mode-copy-cmd)
       (define-key operation-mode-map (kbd "M-l") 'operation-mode-insert-log)))
 
 
